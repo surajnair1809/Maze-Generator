@@ -28,7 +28,6 @@ public class Cell {
         this.visited = visited ;
     }
     public Cell getRandomNeighbor() throws AllNeighborsVisited {
-//        System.out.println(this.toString() + "----getRandomNeighbor----");
         List<Cell> available = new ArrayList<>();
         for( Cell neighbor : neighbors ){
             if( !neighbor.isVisited() )
@@ -36,8 +35,6 @@ public class Cell {
         }
         if(available.size() > 0 ){
             int direction = (int)(Math.random() * available.size());
-//            System.out.println("----size----" + available.size());
-//            System.out.println("----direction----" + direction);
             return available.get(direction) ;
         }
 
@@ -69,6 +66,8 @@ public class Cell {
     }
 
     public boolean isInSolutionPath(){ return this.inSolutionPath ; }
+
+    public void inSolutionPath(){ this.inSolutionPath = true ; }
 
     @Override
     public String toString() {
@@ -133,5 +132,24 @@ public class Cell {
             }
         }
         return false ;
+    }
+
+    //For BFS
+    public ArrayList<Cell> getNeighborsWithPath() {
+        ArrayList<Cell> neighborsWithPath = new ArrayList<>();
+        for (int i = 0 ; i < 4 ; i++ ){
+            Wall wall = walls[i];
+            if( !wall.exist() && !neighbors[i].inSolutionPath){
+                neighborsWithPath.add(neighbors[i]);
+            }
+        }
+        return neighborsWithPath ;
+    }
+
+    //For DFS
+    public Cell getRandomNeighborWithPath(){
+        ArrayList<Cell> neighborsWithPath = this.getNeighborsWithPath() ;
+        int i = (int)(Math.random() * neighborsWithPath.size());
+        return neighborsWithPath.get(i);
     }
 }
