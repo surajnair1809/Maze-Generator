@@ -70,15 +70,12 @@ public class Maze {
         }
     }
 
-    //TODO : BreakWalls function --> Top + 2 % 4 = Bottom , Bottom + 2 % 4 == Top
 
     public boolean breakWalls(Cell one , Cell two){
         int direction = one.getDirection(two);
         if(direction != -1 ){
             one.removeWall(direction) ;
             two.removeWall((direction + 2)%4) ;
-//            System.out.println(one + " -->" + Arrays.toString(one.getWalls()));
-//            System.out.println(two + " -->" + Arrays.toString(two.getWalls()));
             return true ;
         }
         return false ;
@@ -95,26 +92,33 @@ public class Maze {
             }
             System.out.println();
             for (int j = 0; j < width ; j++) {
-                if( j == 0 && grid[i][j].getWalls()[Direction.Left].exist()){
+                if (j == 0 && grid[i][j].getWalls()[Direction.Left].exist()) {
                     System.out.print("|");
-                } else if(j == 0){
+                } else if (j == 0) {
                     System.out.print(" ");
                 }
-                if( grid[i][j].getWalls()[Direction.Right].exist() ){
-                    System.out.print("    |");
+                if (grid[i][j].inSolutionPath) {
+                    System.out.print(" O0");
                 } else {
-                    System.out.print("     ");
+                    System.out.print("   ");
+                }
+                if (grid[i][j].getWalls()[Direction.Right].exist()) {
+                    System.out.print(" |");
+                } else {
+                    System.out.print("  ");
                 }
             }
             System.out.println();
         }
 
-        for (int j = 0; j < width ; j++) {
-            if( j == 0 ) System.out.print("+");
-            if( grid[length - 1][j].getWalls()[Direction.Bottom].exist() ){
+        for (int j = 0; j < width; j++) {
+            if (j == 0) System.out.print("+");
+            if (grid[length - 1][j].getWalls()[Direction.Bottom].exist()) {
                 System.out.print("----+");
             }
         }
+
+        System.out.println();
     }
 
 }

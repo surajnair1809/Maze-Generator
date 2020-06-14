@@ -1,20 +1,23 @@
 package com.challenge.Maze;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class Cell {
-    public int x , y ;
-    private Cell [] neighbors  ;
-    private Wall[] walls ;
-    private boolean visited = false ;
-    public boolean inSolutionPath = false ;
+    private final Cell[] neighbors;
+    public int x, y;
+    private Wall[] walls;
+    private boolean visited = false;
+    public boolean inSolutionPath = false;
 
     public Cell() {
         walls = new Wall[4];
         for (int i = 0; i < 4; i++) {
             walls[i] = new Wall();
         }
-        neighbors = new Cell[4] ;
+        neighbors = new Cell[4];
     }
 
     public Cell( int x , int y ){
@@ -29,23 +32,87 @@ public class Cell {
     }
     public Cell getRandomNeighbor() throws AllNeighborsVisited {
         List<Cell> available = new ArrayList<>();
-        for( Cell neighbor : neighbors ){
-            if( !neighbor.isVisited() )
-                available.add(neighbor) ;
+        for (Cell neighbor : neighbors) {
+            if (!neighbor.isVisited())
+                available.add(neighbor);
         }
-        if(available.size() > 0 ){
-            int direction = (int)(Math.random() * available.size());
-            return available.get(direction) ;
+        if (available.size() > 0) {
+            int direction = (int) (Math.random() * available.size());
+            return available.get(direction);
         }
 
-        throw new AllNeighborsVisited() ;
+        throw new AllNeighborsVisited();
     }
 
-    public Cell [] getNeighbors() {
+
+    public boolean isNeighbor(Cell two) {
+        for (Cell neighbor : neighbors) {
+            if (neighbor.equals(two)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getDirection(Cell two) {
+        for (int i = 0; i < 4; i++) {
+            if (neighbors[i].equals(two)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void removeWall(int i) {
+        this.walls[i].breakWall();
+    }
+
+    public boolean hasUnvisitedNeighbors() {
+        for (Cell neighbor : neighbors) {
+            if (!neighbor.isVisited()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //For BFS
+    public ArrayList<Cell> getNeighborsWithPath() {
+        ArrayList<Cell> neighborsWithPath = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Wall wall = walls[i];
+            if (!wall.exist() && !neighbors[i].inSolutionPath) {
+                neighborsWithPath.add(neighbors[i]);
+            }
+        }
+        return neighborsWithPath;
+    }
+
+    //For DFS
+    public Cell getRandomNeighborWithPath() throws AllNeighborsVisited {
+        /*
+        ArrayList<Cell> neighborsWithPath = this.getNeighborsWithPath() ;
+        int i = (int)(Math.random() * neighborsWithPath.size());
+        return neighborsWithPath.get(i);
+        */
+
+        if (!walls[Direction.Right].exist() && !neighbors[Direction.Right].inSolutionPath)
+            return neighbors[Direction.Right];
+        else if (!walls[Direction.Bottom].exist() && !neighbors[Direction.Bottom].inSolutionPath)
+            return neighbors[Direction.Bottom];
+        else if (!walls[Direction.Top].exist() && !neighbors[Direction.Top].inSolutionPath)
+            return neighbors[Direction.Top];
+        else if (!walls[Direction.Left].exist() && !neighbors[Direction.Left].inSolutionPath)
+            return neighbors[Direction.Left];
+        else
+            throw new AllNeighborsVisited();
+    }
+
+    public Cell[] getNeighbors() {
         return neighbors;
     }
 
-    public void setNeighbors(Cell [] neighbors) {
+    public void setNeighbors(Cell[] neighbors) {
         System.arraycopy(neighbors, 0, this.neighbors, 0, 4);
     }
 
@@ -102,54 +169,4 @@ public class Cell {
         return result;
     }
 
-
-    public boolean isNeighbor(Cell two) {
-        for( Cell neighbor : neighbors ){
-            if( neighbor.equals(two) ){
-                return true ;
-            }
-        }
-        return false ;
-    }
-
-    public int getDirection(Cell two) {
-        for (int i = 0; i < 4 ; i++) {
-            if( neighbors[i].equals(two)){
-                return i ;
-            }
-        }
-        return  - 1;
-    }
-
-    public void removeWall(int i) {
-        this.walls[i].breakWall();
-    }
-
-    public boolean hasUnvisitedNeighbors() {
-        for( Cell neighbor : neighbors ){
-            if( !neighbor.isVisited() ){
-                return true ;
-            }
-        }
-        return false ;
-    }
-
-    //For BFS
-    public ArrayList<Cell> getNeighborsWithPath() {
-        ArrayList<Cell> neighborsWithPath = new ArrayList<>();
-        for (int i = 0 ; i < 4 ; i++ ){
-            Wall wall = walls[i];
-            if( !wall.exist() && !neighbors[i].inSolutionPath){
-                neighborsWithPath.add(neighbors[i]);
-            }
-        }
-        return neighborsWithPath ;
-    }
-
-    //For DFS
-    public Cell getRandomNeighborWithPath(){
-        ArrayList<Cell> neighborsWithPath = this.getNeighborsWithPath() ;
-        int i = (int)(Math.random() * neighborsWithPath.size());
-        return neighborsWithPath.get(i);
-    }
 }
