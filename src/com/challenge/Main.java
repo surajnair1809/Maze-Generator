@@ -1,4 +1,6 @@
-package com.challenge.Maze;
+package com.challenge;
+
+import com.challenge.Maze.Maze;
 
 public class Main {
 
