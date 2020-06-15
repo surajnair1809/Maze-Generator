@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        Maze maze = new Maze(14, 28);
+        Maze maze = new Maze(10, 10);
         maze.generate();
         maze.show();
 
